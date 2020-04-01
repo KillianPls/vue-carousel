@@ -566,9 +566,9 @@ export default {
      */
     attachMutationObserver() {
       const MutationObserver =
-        window.MutationObserver ||
-        window.WebKitMutationObserver ||
-        window.MozMutationObserver;
+        this.$el.ownerDocument.MutationObserver ||
+        this.$el.ownerDocument.WebKitMutationObserver ||
+        this.$el.ownerDocument.MozMutationObserver;
 
       if (MutationObserver) {
         let config = {
@@ -617,7 +617,7 @@ export default {
      * @return {Number} Browser"s width in pixels
      */
     getBrowserWidth() {
-      this.browserWidth = window.innerWidth;
+      this.browserWidth = this.$el.ownerDocument.innerWidth;
       return this.browserWidth;
     },
     /**
@@ -728,13 +728,13 @@ export default {
         return;
       }
 
-      document.addEventListener(
+      this.$el.ownerDocument.addEventListener(
         this.isTouch ? "touchend" : "mouseup",
         this.onEnd,
         true
       );
 
-      document.addEventListener(
+      this.$el.ownerDocument.addEventListener(
         this.isTouch ? "touchmove" : "mousemove",
         this.onDrag,
         true
@@ -784,12 +784,12 @@ export default {
       this.render();
 
       // clear events listeners
-      document.removeEventListener(
+      this.$el.ownerDocument.removeEventListener(
         this.isTouch ? "touchend" : "mouseup",
         this.onEnd,
         true
       );
-      document.removeEventListener(
+      this.$el.ownerDocument.removeEventListener(
         this.isTouch ? "touchmove" : "mousemove",
         this.onDrag,
         true
@@ -917,7 +917,7 @@ export default {
     }
   },
   mounted() {
-    window.addEventListener(
+    this.$el.ownerDocument.addEventListener(
       "resize",
       debounce(this.onResize, this.refreshRate)
     );
@@ -954,7 +954,7 @@ export default {
   },
   beforeDestroy() {
     this.detachMutationObserver();
-    window.removeEventListener("resize", this.getBrowserWidth);
+    this.$el.ownerDocument.removeEventListener("resize", this.getBrowserWidth);
     this.$refs["VueCarousel-inner"].removeEventListener(
       this.transitionstart,
       this.handleTransitionStart
