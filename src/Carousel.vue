@@ -721,20 +721,21 @@ export default {
      */
     /* istanbul ignore next */
     onStart(e) {
-      // alert("start");
+      const iframe = document.getElementById('cleed-frame');
+      const cleedDoc = iframe.contentWindow.document;
 
       // detect right click
       if (e.button == 2) {
         return;
       }
 
-      this.$el.ownerDocument.addEventListener(
+      cleedDoc.addEventListener(
         this.isTouch ? "touchend" : "mouseup",
         this.onEnd,
         true
       );
 
-      this.$el.ownerDocument.addEventListener(
+      cleedDoc.addEventListener(
         this.isTouch ? "touchmove" : "mousemove",
         this.onDrag,
         true
@@ -751,6 +752,9 @@ export default {
      */
 
     onEnd(e) {
+      const iframe = document.getElementById('cleed-frame');
+      const cleedDoc = iframe.contentWindow.document;
+
       // restart autoplay if specified
       if (this.autoplay && !this.autoplayHoverPause) {
         this.restartAutoplay();
@@ -784,12 +788,12 @@ export default {
       this.render();
 
       // clear events listeners
-      this.$el.ownerDocument.removeEventListener(
+      cleedDoc.removeEventListener(
         this.isTouch ? "touchend" : "mouseup",
         this.onEnd,
         true
       );
-      this.$el.ownerDocument.removeEventListener(
+      cleedDoc.removeEventListener(
         this.isTouch ? "touchmove" : "mousemove",
         this.onDrag,
         true
