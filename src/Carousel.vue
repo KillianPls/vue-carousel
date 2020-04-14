@@ -721,24 +721,35 @@ export default {
      */
     /* istanbul ignore next */
     onStart(e) {
-      // alert("start");
+      // const iframe = document.getElementById('cleed-frame');
+      // const cleedDoc = iframe.contentWindow.document;
 
       // detect right click
       if (e.button == 2) {
         return;
       }
 
-      this.$el.ownerDocument.addEventListener(
-        this.isTouch ? "touchend" : "mouseup",
-        this.onEnd,
-        true
-      );
+      const iframes = document.getElementsByTagName('IFRAME')
 
-      this.$el.ownerDocument.addEventListener(
-        this.isTouch ? "touchmove" : "mousemove",
-        this.onDrag,
-        true
-      );
+      document.addEventListener(this.isTouch ? "touchend" : "mouseup", this.onEnd, true);
+      document.addEventListener(this.isTouch ? "touchmove" : "mousemove", this.onDrag, true);
+      for (let index = 0; index < iframes.length; index++) {
+          const iframe = iframes[index];
+
+          iframe.contentWindow.document.addEventListener(this.isTouch ? "touchend" : "mouseup", this.onEnd, true);
+          iframe.contentWindow.document.addEventListener(this.isTouch ? "touchmove" : "mousemove", this.onDrag, true);
+      }
+      // cleedDoc.addEventListener(
+      //   this.isTouch ? "touchend" : "mouseup",
+      //   this.onEnd,
+      //   true
+      // );
+
+      // cleedDoc.addEventListener(
+      //   this.isTouch ? "touchmove" : "mousemove",
+      //   this.onDrag,
+      //   true
+      // );
 
       this.startTime = e.timeStamp;
       this.dragging = true;
@@ -751,6 +762,9 @@ export default {
      */
 
     onEnd(e) {
+      // const iframe = document.getElementById('cleed-frame');
+      // const cleedDoc = iframe.contentWindow.document;
+
       // restart autoplay if specified
       if (this.autoplay && !this.autoplayHoverPause) {
         this.restartAutoplay();
@@ -783,17 +797,27 @@ export default {
 
       this.render();
 
+      const iframes = document.getElementsByTagName('IFRAME')
+
+      document.removeEventListener(this.isTouch ? "touchend" : "mouseup", this.onEnd, true);
+      document.removeEventListener(this.isTouch ? "touchmove" : "mousemove", this.onDrag, true);
+      for (let index = 0; index < iframes.length; index++) {
+          const iframe = iframes[index];
+
+          iframe.contentWindow.document.removeEventListener(this.isTouch ? "touchend" : "mouseup", this.onEnd, true);
+          iframe.contentWindow.document.removeEventListener(this.isTouch ? "touchmove" : "mousemove", this.onDrag, true)
+      }
       // clear events listeners
-      this.$el.ownerDocument.removeEventListener(
-        this.isTouch ? "touchend" : "mouseup",
-        this.onEnd,
-        true
-      );
-      this.$el.ownerDocument.removeEventListener(
-        this.isTouch ? "touchmove" : "mousemove",
-        this.onDrag,
-        true
-      );
+      // cleedDoc.removeEventListener(
+      //   this.isTouch ? "touchend" : "mouseup",
+      //   this.onEnd,
+      //   true
+      // );
+      // cleedDoc.removeEventListener(
+      //   this.isTouch ? "touchmove" : "mousemove",
+      //   this.onDrag,
+      //   true
+      // );
     },
     /**
      * Trigger actions when mouse is pressed and then moved (mouse drag)
